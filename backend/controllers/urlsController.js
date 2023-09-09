@@ -3,7 +3,7 @@ import Url from "../models/urlModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 
-// @desc    Reroute Url
+// @desc    Create Short Url
 // @route   POST /api/urls/
 // @access  Public
 const createUrl = asyncHandler(async (req, res) => {
@@ -38,25 +38,4 @@ const createUrl = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Reroute Url
-// @route   GET /api/urls/route/:urlId
-// @access  Public
-const routeUrl = asyncHandler(async (req, res) => {
-  try {
-    const url = await Url.findOne({ urlId: req.params.urlId });
-    if (url) {
-      await Url.updateOne(
-        {
-          urlId: req.params.urlId,
-        },
-        { $inc: { clicks: 1 } }
-      );
-      return res.redirect(url.originalUrl);
-    } else res.status(404).json("Not found");
-  } catch (err) {
-    console.log(err);
-    res.status(500).json("Server Error");
-  }
-});
-
-export { routeUrl, createUrl };
+export { createUrl };
