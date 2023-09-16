@@ -5,6 +5,9 @@ import HomeScreen from "./screens/HomeScreen";
 import AboutScreen from "./screens/AboutScreen";
 import ContactScreen from "./screens/ContactScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
+import LoginScreen from "./screens/LoginScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -12,11 +15,14 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<HomeScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/signup" element={<SignUpScreen />} />
         <Route path="/about" element={<AboutScreen />} />
         <Route path="/contact" element={<ContactScreen />} />
         <Route path="*" element={<NotFoundScreen />} />
       </Routes>
       <Footer />
+      <ToastContainer />
     </>
   );
 }

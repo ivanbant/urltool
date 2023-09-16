@@ -5,7 +5,6 @@ import Url from "../models/urlModel.js";
 // @route   GET /api/urls/route/:urlId
 // @access  Public
 const routeUrl = asyncHandler(async (req, res) => {
-  console.log(req.params.urlId);
   try {
     const url = await Url.findOne({ urlId: req.params.urlId });
     if (url) {

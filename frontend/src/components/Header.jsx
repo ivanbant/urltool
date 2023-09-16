@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const menuBtn = useRef(null);
@@ -16,35 +17,39 @@ const Header = () => {
           <img src="/src/assets/images/logo.svg" alt="" />
           {/* <!-- Left Menu --> */}
           <div className="hidden lg:flex space-x-8 font-bold">
-            <a
-              href="#"
-              className="text-grayishViolet hover:text-veryDarkViolet"
-            >
-              Features
-            </a>
-            <a
-              href="#"
-              className="text-grayishViolet hover:text-veryDarkViolet"
-            >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="text-grayishViolet hover:text-veryDarkViolet"
-            >
-              Resources
-            </a>
+            <Link to="/">
+              <div className="text-grayishViolet hover:text-veryDarkViolet">
+                Home
+              </div>
+            </Link>
+            <Link to="/pricing">
+              <div className="text-grayishViolet hover:text-veryDarkViolet">
+                Pricing
+              </div>
+            </Link>
+            <Link to="/contact">
+              <div className="text-grayishViolet hover:text-veryDarkViolet">
+                Contact
+              </div>
+            </Link>
+            <Link to="/about">
+              <div className="text-grayishViolet hover:text-veryDarkViolet">
+                About
+              </div>
+            </Link>
           </div>
         </div>
         {/* <!-- Right Menu --> */}
         <div className="hidden lg:flex items-center space-x-6 font-bold text-grayishViolet">
-          <div className="hover:text-veryDarkViolet">Login</div>
-          <a
-            href=""
-            className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:opacity-70"
-          >
-            Sign Up
-          </a>
+          <Link to="/login">
+            {" "}
+            <div className="hover:text-veryDarkViolet">Login</div>
+          </Link>
+          <Link to="/signup">
+            <div className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:opacity-70">
+              Sign Up
+            </div>
+          </Link>
         </div>
 
         {/* <!-- Hamburger Button --> */}
@@ -65,9 +70,9 @@ const Header = () => {
 
       <div
         ref={menu}
-        class="hidden absolute p-6 rounded-lg bg-darkViolet left-6 right-6 top-20 z-40"
+        className="hidden absolute p-6 rounded-lg bg-darkViolet left-6 right-6 top-20 z-40"
       >
-        <div class="flex flex-col items-center justify-center w-full space-y-6 font-bold text-white rounded-sm">
+        <div className="flex flex-col items-center justify-center w-full space-y-6 font-bold text-white rounded-sm">
           <a href="#" className="w-full text-center">
             Features
           </a>

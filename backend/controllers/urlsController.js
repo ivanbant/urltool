@@ -7,17 +7,31 @@ import { nanoid } from "nanoid";
 // @route   POST /api/urls/
 // @access  Public
 const createUrl = asyncHandler(async (req, res) => {
-  const { originalUrl } = req.body;
+  const { originalUrls } = req.body;
   const base = process.env.BASE_URL || "http://localhost:5000";
+  let urlIdExists, url;
+  let urlId, shortUrl;
+  let responseUrls = [];
+  for (const originalUrl of originalUrls) {
+    if (!validateUrl(originalUrl)) {
+      res.status(400).json("Invalid Url");
+      return;
+    }
+  }
 
-  const urlId = nanoid();
-  if (validateUrl(originalUrl)) {
+  for (const originalUrl of originalUrls) {
     try {
-      let url = await Url.findOne({ originalUrl });
+      url = await Url.findOne({ originalUrl });
       if (url) {
-        res.json(url);
+        responseUrls.push(url);
       } else {
-        const shortUrl = `${base}/${urlId}`;
+        do {
+          urlId = nanoid(6);
+          urlIdExists = await Url.findOne({ urlId });
+          if (!urlIdExists) break;
+        } while (urlIdExists);
+
+        shortUrl = `${base}/${urlId}`;
 
         url = new Url({
           originalUrl,
@@ -27,15 +41,14 @@ const createUrl = asyncHandler(async (req, res) => {
         });
 
         await url.save();
-        res.status(201).json(url);
+        responseUrls.push(url);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       res.status(500).json("Server Error");
     }
-  } else {
-    res.status(400).json("Invalid Original Url");
   }
+  res.status(201).json(responseUrls);
 });
 
 export { createUrl };
