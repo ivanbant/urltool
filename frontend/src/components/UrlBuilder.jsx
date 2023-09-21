@@ -15,6 +15,11 @@ const UrlBuilder = () => {
   const [shortUrls, setShortUrls] = useState([]);
 
   const shortenUrl = async (originalUrls) => {
+    const { data, filteredUrls } = await createUrls(originalUrls);
+    setShortUrls([...data, ...filteredUrls]);
+  };
+
+  const createUrls = async (originalUrls) => {
     try {
       const { data } = await axios.post("http://localhost:5000/api/urls", {
         originalUrls,
@@ -27,10 +32,25 @@ const UrlBuilder = () => {
           (shortUrlItem) => shortUrlItem.shortUrl !== dataItem.shortUrl
         );
       });
-      setShortUrls([...data, ...filteredUrls]);
+      return { data, filteredUrls };
     } catch (error) {
       console.log(error.message || error.message.data || error);
     }
+  };
+
+  const makeQr = async (originalUrls) => {
+    const { data, filteredUrls } = await createUrls(originalUrls);
+    let urlIds = [];
+    data.forEach((url) => {
+      urlIds.push(url._id);
+    });
+    const { data: qrData } = await axios.post(
+      "http://localhost:5000/api/urls/qr",
+      {
+        urlIds,
+      }
+    );
+    setShortUrls([...qrData, ...filteredUrls]);
   };
 
   return (
@@ -51,7 +71,7 @@ const UrlBuilder = () => {
                   Url Builder
                 </div>
               </div>
-              <ShortUrlForm shortenUrl={shortenUrl} />
+              <ShortUrlForm shortenUrl={shortenUrl} makeQr={makeQr} />
             </>
           ) : (
             <>

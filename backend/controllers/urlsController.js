@@ -3,6 +3,7 @@ import Url from "../models/urlModel.js";
 import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
+import QRCode from "qrcode";
 
 // @desc    Create Short Url
 // @route   POST /api/urls/
@@ -40,7 +41,6 @@ const createUrl = asyncHandler(async (req, res) => {
           originalUrl,
           shortUrl,
           urlId,
-          date: new Date(),
         });
 
         await url.save();
@@ -56,18 +56,24 @@ const createUrl = asyncHandler(async (req, res) => {
 });
 
 const createQRfromId = asyncHandler(async (req, res) => {
-  try {
-    const url = await Url.findById(req.params.id);
-    if (url) {
-      if (!qrImage) {
-        url.qrImage = await QRCode.toDataURL(`${url.shortUrl}?qrcode=true`);
-        await url.save();
-      }
-      res.status(201).json(url);
-    } else res.status(404).json("Not found");
-  } catch (err) {
-    res.status(500);
-    throw new Error("Server Error: " + err);
+  const { urlIds } = req.body;
+  let responseUrls = [];
+  for (const urlId of urlIds) {
+    try {
+      const url = await Url.findById(urlId);
+      if (url) {
+        if (!url.qrImage) {
+          url.qrImage = await QRCode.toDataURL(`${url.shortUrl}?qrcode=true`);
+          await url.save();
+          responseUrls.push(url);
+        }
+      } else res.status(404).json("Not found");
+    } catch (err) {
+      res.status(500);
+      throw new Error("Server Error: " + err);
+    }
   }
+  res.status(201).json(responseUrls);
 });
+
 export { createUrl, createQRfromId };

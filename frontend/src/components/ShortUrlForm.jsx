@@ -1,19 +1,10 @@
 import { useState } from "react";
 
-const ShortUrlForm = ({ shortenUrl }) => {
+const ShortUrlForm = ({ shortenUrl, makeQr }) => {
   const [url, setUrl] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    shortenUrl([url]);
-  };
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      id="link-form"
-      className="relative flex flex-col w-100 p-10  space-y-4 bg-darkViolet rounded-b-lg rounded-tr-lg md:flex-row md:space-y-0 md:space-x-3"
-    >
+    <div className="relative flex flex-col w-100 p-10  space-y-4 bg-darkViolet rounded-b-lg rounded-tr-lg md:flex-row md:space-y-0 md:space-x-3">
       <input
         id="link-input"
         type="text"
@@ -22,10 +13,16 @@ const ShortUrlForm = ({ shortenUrl }) => {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
       />
-      <button className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2">
+      <button
+        onClick={() => shortenUrl([url])}
+        className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2"
+      >
         Shorten!
       </button>
-      <button className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2">
+      <button
+        onClick={() => makeQr([url])}
+        className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2"
+      >
         Make QR!
       </button>
       {/* <!-- Error Message --> */}
@@ -33,7 +30,7 @@ const ShortUrlForm = ({ shortenUrl }) => {
         id="err-msg"
         className="absolute left-7 bottom-3 text-red text-sm italic"
       ></div>
-    </form>
+    </div>
   );
 };
 
