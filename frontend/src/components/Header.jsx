@@ -1,7 +1,11 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../services/UserContext";
 
 const Header = () => {
+  const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const menuBtn = useRef(null);
   const menu = useRef(null);
   const toggleMobileMenu = () => {
@@ -9,6 +13,12 @@ const Header = () => {
     menu.current.classList.toggle("flex");
     menu.current.classList.toggle("hidden");
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <nav className="relative container mx-auto p-6">
       <div className="flex items-center justify-between">
@@ -40,17 +50,33 @@ const Header = () => {
           </div>
         </div>
         {/* <!-- Right Menu --> */}
-        <div className="hidden lg:flex items-center space-x-6 font-bold text-grayishViolet">
-          <Link to="/login">
-            {" "}
-            <div className="hover:text-veryDarkViolet">Login</div>
-          </Link>
-          <Link to="/signup">
-            <div className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:opacity-70">
-              Sign Up
-            </div>
-          </Link>
-        </div>
+
+        {!user || user.isUnreg ? (
+          <div className="hidden lg:flex items-center space-x-6 font-bold text-grayishViolet">
+            <Link to="/login">
+              {" "}
+              <div className="hover:text-veryDarkViolet">Login</div>
+            </Link>
+            <Link to="/signup">
+              <div className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:opacity-70">
+                Sign Up
+              </div>
+            </Link>
+          </div>
+        ) : (
+          <div className="hidden lg:flex items-center space-x-6 font-bold text-grayishViolet">
+            <Link to="/dashboard">
+              {" "}
+              <div className="hover:text-veryDarkViolet">Dashboard</div>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-8 py-3 font-bold text-white bg-cyan rounded-full hover:opacity-70 "
+            >
+              Logout
+            </button>
+          </div>
+        )}
 
         {/* <!-- Hamburger Button --> */}
         <button

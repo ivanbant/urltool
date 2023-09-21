@@ -23,11 +23,37 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create Unregistered User
+// @route   POST /api/users/unreg
+// @access  Public
+const createUnregUser = asyncHandler(async (req, res) => {
+  const { fingerprint } = req.body;
+  const userExists = await User.findOne({ fingerprint });
+  if (userExists) {
+    return res.status(200).json({
+      _id: userExists._id,
+    });
+  }
+  const user = await User.create({
+    tier: "unregistered",
+    fingerprint,
+    uregUserEntryDate: new Date(),
+  });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Server Error");
+  }
+});
+
 // @desc    Register user
 // @route   POST /api/users/
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -110,4 +136,5 @@ export {
   logoutUser,
   getUserProfile,
   updateUserProfile,
+  createUnregUser,
 };

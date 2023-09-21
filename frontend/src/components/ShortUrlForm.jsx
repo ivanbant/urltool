@@ -23,7 +23,10 @@ const ShortUrlForm = ({ shortenUrl }) => {
         onChange={(e) => setUrl(e.target.value)}
       />
       <button className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2">
-        Shorten It!
+        Shorten!
+      </button>
+      <button className="px-10 py-3 text-white bg-cyan rounded-lg hover:bg-cyanLight focus:outline-none md:py-2">
+        Make QR!
       </button>
       {/* <!-- Error Message --> */}
       <div

@@ -3,6 +3,7 @@ import Hero from "../components/Hero";
 import UrlBuilder from "../components/UrlBuilder";
 import InfoSection from "../components/InfoSection";
 import CTASection from "../components/CtaSection";
+import PlansSection from "../components/PlansSection";
 
 const HomeScreen = () => {
   return (
@@ -10,6 +11,7 @@ const HomeScreen = () => {
       <Hero />
       <UrlBuilder />
       <InfoSection />
+      <PlansSection />
       <CTASection />
     </>
   );

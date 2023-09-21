@@ -6,6 +6,7 @@ const ShortUrl = ({ url }) => {
       </p>
       <div className="flex flex-col items-center justify-end flex-1 space-x-4 space-y-2 md:flex-row md:space-y-0">
         <div className="font-bold text-cyan">{url.shortUrl}</div>
+        <div className="bg-black w-10 h10"></div>
         <button className="p-2 px-8 text-white bg-cyan rounded-lg hover:opacity-70 focus:outline-none">
           Copy
         </button>

@@ -3,10 +3,20 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    isAdmin: { type: Boolean, required: true, default: false },
+    name: { type: String, required: false },
+    email: { type: String, unique: true, sparse: true },
+    password: { type: String, required: false },
+    tier: {
+      type: String,
+      required: true,
+      enum: ["unregistered", "free", "pro", "enterprise"],
+      default: "free",
+    },
+    urlsCreated: { type: Number, required: false, default: 0 },
+    userCookies: { type: String, required: false },
+    fingerprint: { type: String, required: false },
+    uregUserEntryDate: { type: Date, required: false, expires: "30d" },
+    isAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,

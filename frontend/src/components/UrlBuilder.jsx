@@ -1,22 +1,24 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import ShortUrl from "./ShortUrl";
 import ShortUrlForm from "./ShortUrlForm";
 import BuilderUrlForm from "./BuilderUrlForm";
+import UserContext from "../services/UserContext";
 
 const UrlBuilder = () => {
   // const currentDate = new Date();
   // const localDate = `${currentDate.getFullYear()}-${String(
   //   currentDate.getMonth() + 1
   // ).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
+  const { user } = useContext(UserContext);
   const [simpleBuilder, setSimpleBuilder] = useState(true);
-
   const [shortUrls, setShortUrls] = useState([]);
 
   const shortenUrl = async (originalUrls) => {
     try {
       const { data } = await axios.post("http://localhost:5000/api/urls", {
         originalUrls,
+        userId: user._id,
       });
 
       let filteredUrls = shortUrls;
@@ -27,7 +29,7 @@ const UrlBuilder = () => {
       });
       setShortUrls([...data, ...filteredUrls]);
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message || error.message.data || error);
     }
   };
 

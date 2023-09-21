@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const UrlSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   urlId: {
     type: String,
     required: true,
@@ -22,6 +23,10 @@ const UrlSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0,
+  },
+  qrImage: {
+    type: String,
+    required: false,
   },
   date: {
     type: String,
