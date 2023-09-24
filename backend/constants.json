@@ -1,0 +1,10 @@
+{
+  "tier": {
+    "tierUseLimit": {
+      "unregistered": 5,
+      "free": 20,
+      "pro": 100,
+      "enterprise": 1000
+    }
+  }
+}

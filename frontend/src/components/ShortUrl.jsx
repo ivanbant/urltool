@@ -8,7 +8,9 @@ const ShortUrl = ({ url }) => {
         <div className="font-bold text-cyan">{url.shortUrl}</div>
         <div className="relative w-10 h-10">
           {url.qrImage ? (
-            <img src={url.qrImage} alt="qr code" />
+            <div className="absolute w-10 h-10 hover: scale-110">
+              <img className="w-full h-full" src={url.qrImage} alt="qr code" />
+            </div>
           ) : (
             //  <img src="/src/assets/images/qr-code.svg" alt="qr code" />
             <></>

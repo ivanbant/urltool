@@ -4,6 +4,7 @@ import ShortUrl from "./ShortUrl";
 import ShortUrlForm from "./ShortUrlForm";
 import BuilderUrlForm from "./BuilderUrlForm";
 import UserContext from "../services/UserContext";
+import { toast } from "react-toastify";
 
 const UrlBuilder = () => {
   // const currentDate = new Date();
@@ -15,8 +16,11 @@ const UrlBuilder = () => {
   const [shortUrls, setShortUrls] = useState([]);
 
   const shortenUrl = async (originalUrls) => {
-    const { data, filteredUrls } = await createUrls(originalUrls);
-    setShortUrls([...data, ...filteredUrls]);
+    // const { data, filteredUrls } =
+    const response = await createUrls(originalUrls);
+    // if (data) {
+    //   setShortUrls([...data, ...filteredUrls]);
+    // }
   };
 
   const createUrls = async (originalUrls) => {
@@ -34,7 +38,8 @@ const UrlBuilder = () => {
       });
       return { data, filteredUrls };
     } catch (error) {
-      console.log(error.message || error.message.data || error);
+      console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 

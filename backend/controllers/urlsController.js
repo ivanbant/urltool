@@ -4,6 +4,7 @@ import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
+import constants from "../constants.json" assert { type: "json" };
 
 // @desc    Create Short Url
 // @route   POST /api/urls/
@@ -19,9 +20,28 @@ const createUrl = asyncHandler(async (req, res) => {
       return;
     }
   }
+  try {
+    let user = req.user ? req.user : await User.findById(userId);
+    if (!user) {
+      res.status(404).json("User not found");
+      return;
+    } else {
+      if (
+        user.resetDate < new Date() &&
+        user.resetDate.getMonth() !== new Date().getMonth() &&
+        user.resetDate.getDay() <= new Date().getDay()
+      ) {
+        user.urlsCreated = 0;
+        user.resetDate = new Date();
+        await user.save();
+      }
+      if (user.urlsCreated >= constants.tier.tierUseLimit[user.tier]) {
+        res.status(403);
 
-  for (const originalUrl of originalUrls) {
-    try {
+        throw new Error("User has reached their limit of urls created");
+      }
+    }
+    for (const originalUrl of originalUrls) {
       let url = await Url.findOne({ originalUrl });
       if (url) {
         responseUrls.push(url);
@@ -35,23 +55,26 @@ const createUrl = asyncHandler(async (req, res) => {
 
         let shortUrl = `${base}/${urlId}`;
 
-        let user = req.user ? req.user : await User.findById(userId);
         url = new Url({
           user: user._id,
           originalUrl,
           shortUrl,
           urlId,
         });
+        user.urlsCreated++;
 
         await url.save();
+        await user.save();
+
         responseUrls.push(url);
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).json("Server Error: " + err);
-      return;
     }
+  } catch (err) {
+    console.log(err);
+    res.status(res.statusCode || 500);
+    throw new Error(err.message || "Server Error");
   }
+
   res.status(201).json(responseUrls);
 });
 

@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     urlsCreated: { type: Number, required: false, default: 0 },
     userCookies: { type: String, required: false },
     fingerprint: { type: String, required: false },
+    resetDate: { type: Date, required: false, default: new Date() },
     uregUserEntryDate: { type: Date, required: false, expires: "30d" },
     isAdmin: { type: Boolean, default: false },
   },

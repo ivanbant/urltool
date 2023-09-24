@@ -5,6 +5,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import urlsRoutes from "./routes/urlsRoutes.js";
 import indexRoutes from "./routes/indexRoutes.js";
+import { errorHandler } from "./middleware/errorMiddleware.js";
 import "dotenv/config";
 
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,8 @@ app.use("/api/urls", urlsRoutes);
 app.use("", indexRoutes);
 // app.use("/api/urls/qr", qrRoutes);
 
+// Error handling
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`🚀 Server is running at PORT ${PORT}`);
 });
