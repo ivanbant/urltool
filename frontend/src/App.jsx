@@ -7,11 +7,15 @@ import ContactScreen from "./screens/ContactScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
-import DashboardScreen from "./screens/DashboardScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
 import PricingScreen from "./screens/PricingScreen";
+import CheckoutScreen from "./screens/CheckoutScreen";
+import DashboardRoute from "./components/DashboardRoute";
+import DashboardProfileScreen from "./screens/DashboardProfileScreen";
+import DashboardSubscriptionScreen from "./screens/DashboardSubscriptionScreen";
+import DashboardAnalyticsScreen from "./screens/DashboardAnalyticsScreen";
 
 function App() {
   return (
@@ -26,7 +30,21 @@ function App() {
         <Route path="/contact" element={<ContactScreen />} />
         <Route path="*" element={<NotFoundScreen />} />
         <Route path="" element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<DashboardScreen />} />
+          <Route path="/dashboard" element={<DashboardRoute />}>
+            <Route
+              path="/dashboard/profile"
+              element={<DashboardProfileScreen />}
+            />
+            <Route
+              path="/dashboard/subscription"
+              element={<DashboardSubscriptionScreen />}
+            />
+            <Route
+              path="/dashboard/analytics"
+              element={<DashboardAnalyticsScreen />}
+            />
+          </Route>
+          <Route path="/checkout" element={<CheckoutScreen />} />
         </Route>
       </Routes>
       <Footer />

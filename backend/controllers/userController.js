@@ -114,7 +114,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     if (req.body.password) {
-      user.password = req.body.password;
+      if (await user.matchPassword(req.body.password)) {
+        user.password = req.body.newPassword || user.password;
+      } else {
+        res.status(401);
+        throw new Error("Invalid password");
+      }
     }
 
     const updatedUser = await user.save();
@@ -130,6 +135,25 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+const updateUserTier = asyncHandler(async (req, res) => {
+  const { tier } = req.body;
+  const user = req.user;
+  if (user) {
+    user.tier = tier;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      tier: updatedUser.tier,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 export {
   loginUser,
   registerUser,
@@ -137,4 +161,5 @@ export {
   getUserProfile,
   updateUserProfile,
   createUnregUser,
+  updateUserTier,
 };

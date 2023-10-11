@@ -3,9 +3,10 @@ import {
   loginUser,
   registerUser,
   logoutUser,
+  createUnregUser,
+  updateUserTier,
   getUserProfile,
   updateUserProfile,
-  createUnregUser,
 } from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -15,6 +16,7 @@ router.route("/").post(registerUser);
 router.route("/unreg").post(createUnregUser);
 router.post("/logout", logoutUser);
 router.post("/login", loginUser);
+router.route("/tier").put(protect, updateUserTier);
 router
   .route("/profile")
   .get(protect, getUserProfile)
