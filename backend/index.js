@@ -5,6 +5,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import urlsRoutes from "./routes/urlsRoutes.js";
 import indexRoutes from "./routes/indexRoutes.js";
+import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import "dotenv/config";
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/urls", urlsRoutes);
+app.use("/api/subscription", subscriptionRoutes);
 app.use("", indexRoutes);
 // app.use("/api/urls/qr", qrRoutes);
 
