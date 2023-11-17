@@ -17,11 +17,15 @@ const SignUpScreen = () => {
       alert("Passwords do not match");
     } else {
       try {
-        const user = await axios.post("http://localhost:5000/api/users", {
-          name,
-          email,
-          password,
-        });
+        const user = await axios.post(
+          "http://localhost:5000/api/users",
+          {
+            name,
+            email,
+            password,
+          },
+          { withCredentials: true }
+        );
         toast.success("User created successfully");
         navigate("/login");
       } catch (error) {

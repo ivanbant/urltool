@@ -1,10 +1,50 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Url from "../models/urlModel.js";
+import Clicks from "../models/clickModel.js";
 import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
 import constants from "../constants.json" assert { type: "json" };
+
+// @desc    Get Url Clicks
+// @route   GET /api/urls/clicks
+// @access  Private
+const getUrlClicks = asyncHandler(async (req, res) => {
+  const urlId = req.params.urlId;
+  const startDate = new Date(req.query.startDate);
+  const endDate = new Date(req.query.endDate);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(23, 59, 59, 999);
+
+  try {
+    const clicks = await Clicks.find({
+      url: urlId,
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+    res.status(200).json(clicks);
+  } catch (err) {
+    res.status(500);
+    throw new Error("Server Error: " + err);
+  }
+});
+
+// @desc    Get User Urls
+// @route   GET /api/urls/
+// @access  Private
+const getUserUrls = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const urls = await Url.find({ user: userId });
+    res.status(200).json(urls);
+  } catch (err) {
+    res.status(500);
+    throw new Error("Server Error: " + err);
+  }
+});
 
 // @desc    Create Short Url
 // @route   POST /api/urls/
@@ -99,4 +139,4 @@ const createQRfromId = asyncHandler(async (req, res) => {
   res.status(201).json(responseUrls);
 });
 
-export { createUrl, createQRfromId };
+export { createUrl, createQRfromId, getUserUrls, getUrlClicks };

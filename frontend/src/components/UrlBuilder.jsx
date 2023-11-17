@@ -16,11 +16,10 @@ const UrlBuilder = () => {
   const [shortUrls, setShortUrls] = useState([]);
 
   const shortenUrl = async (originalUrls) => {
-    // const { data, filteredUrls } =
-    const response = await createUrls(originalUrls);
-    // if (data) {
-    //   setShortUrls([...data, ...filteredUrls]);
-    // }
+    const { data, filteredUrls } = await createUrls(originalUrls);
+    if (data) {
+      setShortUrls([...data, ...filteredUrls]);
+    }
   };
 
   const createUrls = async (originalUrls) => {

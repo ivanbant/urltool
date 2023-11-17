@@ -1,6 +1,6 @@
 import React from "react";
 
-const DashboardSubscriptionScreen = () => {
+const SubscriptionScreen = () => {
   return (
     <div className="flex flex-col p-10 space-y-4">
       <div>
@@ -15,4 +15,4 @@ const DashboardSubscriptionScreen = () => {
   );
 };
 
-export default DashboardSubscriptionScreen;
+export default SubscriptionScreen;

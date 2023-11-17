@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DashboardProfileScreen = () => {
+const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [oldPassword, setOldPassowrd] = useState("");
@@ -132,4 +132,4 @@ const DashboardProfileScreen = () => {
   );
 };
 
-export default DashboardProfileScreen;
+export default ProfileScreen;

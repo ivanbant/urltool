@@ -24,7 +24,8 @@ export const UserProvider = ({ children }) => {
         "http://localhost:5000/api/users/unreg",
         {
           fingerprint,
-        }
+        },
+        { withCredentials: true }
       );
       setCredentials({ ...data, isUnreg: true });
     } catch (error) {

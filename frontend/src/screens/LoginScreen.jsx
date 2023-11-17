@@ -15,11 +15,14 @@ const LoginScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
-        email,
-        password,
-      });
-      console.log(res);
+      const res = await axios.post(
+        "http://localhost:5000/api/users/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
       const data = res.data;
       if (data) {
         toast.success(`Welcome ${data.name}`);

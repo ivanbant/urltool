@@ -13,9 +13,11 @@ import PrivateRoute from "./components/PrivateRoute";
 import PricingScreen from "./screens/PricingScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import DashboardRoute from "./components/DashboardRoute";
-import DashboardProfileScreen from "./screens/DashboardProfileScreen";
-import DashboardSubscriptionScreen from "./screens/DashboardSubscriptionScreen";
-import DashboardAnalyticsScreen from "./screens/DashboardAnalyticsScreen";
+import ProfileScreen from "./screens/dashboard/ProfileScreen";
+import SubscriptionScreen from "./screens/dashboard/SubscriptionScreen";
+import AnalyticsScreen from "./screens/dashboard/AnalyticsScreen";
+import UrlScreen from "./screens/dashboard/UrlScreen";
+import { DatePickerProvider } from "./components/utils/DatePicker";
 
 function App() {
   return (
@@ -31,17 +33,19 @@ function App() {
         <Route path="*" element={<NotFoundScreen />} />
         <Route path="" element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DashboardRoute />}>
-            <Route
-              path="/dashboard/profile"
-              element={<DashboardProfileScreen />}
-            />
+            <Route path="/dashboard/profile" element={<ProfileScreen />} />
             <Route
               path="/dashboard/subscription"
-              element={<DashboardSubscriptionScreen />}
+              element={<SubscriptionScreen />}
             />
+            <Route path="/dashboard/analytics" element={<AnalyticsScreen />} />
             <Route
-              path="/dashboard/analytics"
-              element={<DashboardAnalyticsScreen />}
+              path="/dashboard/analytics/:urlId"
+              element={
+                <DatePickerProvider>
+                  <UrlScreen />
+                </DatePickerProvider>
+              }
             />
           </Route>
           <Route path="/checkout" element={<CheckoutScreen />} />

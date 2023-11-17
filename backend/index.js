@@ -7,6 +7,7 @@ import urlsRoutes from "./routes/urlsRoutes.js";
 import indexRoutes from "./routes/indexRoutes.js";
 import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
+import "./config/sqldb.js";
 import "dotenv/config";
 
 const PORT = process.env.PORT || 5000;
