@@ -28,7 +28,6 @@ const CheckoutScreen = () => {
   };
 
   const onApprove = (data, actions) => {
-    console.log("Approved");
     return actions.subscription.get().then(function (details) {
       console.log(details);
     });

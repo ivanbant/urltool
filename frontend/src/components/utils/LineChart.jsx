@@ -27,6 +27,7 @@ const LineChart = ({ data }) => {
     const divisor = Math.pow(10, length - 1);
     return Math.ceil(num / divisor) * divisor;
   };
+
   const maxY = roundUp(Math.max(...data.map((item) => item.dataValue)));
   const yAxes = {
     lable: "Clicks",

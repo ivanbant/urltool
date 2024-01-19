@@ -1,10 +1,9 @@
 import React, { useContext, useState, createContext } from "react";
 import Calendar from "./Calendar";
 import { RiArrowDropLeftLine, RiArrowDropRightLine } from "react-icons/ri";
-import { set } from "mongoose";
 
 function DatePicker() {
-  const { selectedStartDate, selectedEndDate, limiters, handleDateSelect } =
+  const { selectedStartDate, selectedEndDate, limiters } =
     useContext(DatePickerContext);
   const [firstCalendarDate, setFirstCalendarDate] = useState(
     selectedStartDate || new Date()

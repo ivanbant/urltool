@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Url from "../models/urlModel.js";
 import Click from "../models/clickModel.js";
+
 // @desc    Reroute Url
 // @route   GET /api/urls/route/:urlId
 // @access  Public

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { DatePickerContext } from "./DatePicker";
 
 function Calendar(props) {

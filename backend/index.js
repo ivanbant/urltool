@@ -5,9 +5,9 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import urlsRoutes from "./routes/urlsRoutes.js";
 import indexRoutes from "./routes/indexRoutes.js";
-import subscriptionRoutes from "./routes/subscriptionRoutes.js";
+import paypalRoutes from "./routes/paypalRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
-import "./config/sqldb.js";
+// import "./config/sqldb.js";
 import "dotenv/config";
 
 const PORT = process.env.PORT || 5000;
@@ -30,7 +30,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/urls", urlsRoutes);
-app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/paypal", paypalRoutes);
 app.use("", indexRoutes);
 // app.use("/api/urls/qr", qrRoutes);
 
