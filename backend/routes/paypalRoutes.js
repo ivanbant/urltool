@@ -1,8 +1,12 @@
 import express from "express";
-import { subscriptionHook } from "../controllers/paypalController.js";
+import {
+  subscriptionHook,
+  subscriptionHandeler,
+} from "../controllers/paypalController.js";
 
 const router = express.Router();
 
-router.route("/").post(subscriptionHook);
+router.route("/subscription/hook").post(subscriptionHook);
+router.route("/subscription").post(subscriptionHandeler);
 
 export default router;
