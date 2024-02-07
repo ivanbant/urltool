@@ -30,15 +30,16 @@ const CheckoutScreen = () => {
   };
 
   const onApprove = (data, actions) => {
-    return actions.subscription.get().then(function (details) {
+    return actions.subscription.get().then(async function (details) {
       const subscriptionId = details.id;
-      axios.post(
+      const res = await axios.post(
         "http://localhost:5000/api/paypal/subscription/create",
         {
           subscriptionId,
         },
         { withCredentials: true }
       );
+      console.log(res);
     });
   };
   const onError = (err) => {

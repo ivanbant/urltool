@@ -6,7 +6,19 @@ const SubscriptionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  plan: {
+  payerId: {
+    type: String,
+    required: true,
+  },
+  payerName: {
+    type: String,
+    required: false,
+  },
+  payerSurname: {
+    type: String,
+    required: false,
+  },
+  tier: {
     type: String,
     required: true,
   },
@@ -18,16 +30,17 @@ const SubscriptionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  billingToken: {
-    type: String,
-    required: true,
-  },
-  billingPlanId: {
-    type: String,
+  startTime: {
+    type: Date,
     required: true,
   },
   nextBillingDate: {
     type: Date,
     required: true,
   },
+  cancelLink: {
+    type: String,
+    required: true,
+  },
 });
+export default mongoose.model("Subscription", SubscriptionSchema);

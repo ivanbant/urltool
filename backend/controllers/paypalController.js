@@ -1,18 +1,52 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import generatePaypalToken from "../utils/generatePaypalToken.js";
-
-const { PAYPAL_BASE_URL } = process.env;
+import Subscription from "../models/subscriptionModel.js";
+import axios from "axios";
 
 // @desc    Handeler for paypal subscription request
 // @route   POST /api/paypal/subscription/create
 // @access  Public
 const createSubscription = asyncHandler(async (req, res) => {
+  const { PAYPAL_BASE_URL } = process.env;
   const { subscriptionId } = req.body;
-  console.log(subscriptionId);
-  // const accessToken = await generatePaypalToken();
-
-  // const data = await createPaypalSubscription.data;
-  // res.status(201).send(data);
+  const accessToken = await generatePaypalToken();
+  try {
+    const { data } = await axios({
+      url: `${PAYPAL_BASE_URL}/v1/billing/subscriptions/${subscriptionId}`,
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    if (data || data.status === "ACTIVE") {
+      let subscription = await Subscription.findOne({
+        subscriptionId: data.id,
+      });
+      if (subscription)
+        res.status(201).send({ subscriptionId: subscription.subscriptionId });
+      else {
+        subscription = await Subscription.create({
+          user: req.user._id,
+          email: data.subscriber.email_address,
+          payerId: data.subscriber.payer_id,
+          payerName: data.subscriber.name.given_name,
+          payerSurname: data.subscriber.name.surname,
+          tier: "Pro",
+          status: data.status,
+          subscriptionId: data.id,
+          startTime: new Date(data.start_time),
+          nextBillingDate: new Date(data.billing_info.next_billing_time),
+          cancelLink: data.links[0].href,
+        });
+        res.status(201).send({ subscriptionId: subscription.subscriptionId });
+      }
+    }
+  } catch (err) {
+    res.status(500);
+    throw new Error("Paypal error");
+  }
   res.status(200);
 });
 
