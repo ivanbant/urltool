@@ -4,7 +4,6 @@ import {
   registerUser,
   logoutUser,
   createUnregUser,
-  updateUserTier,
   getUserProfile,
   updateUserProfile,
 } from "../controllers/userController.js";
@@ -16,7 +15,6 @@ router.route("/").post(registerUser);
 router.route("/unreg").post(createUnregUser);
 router.post("/logout", logoutUser);
 router.post("/login", loginUser);
-router.route("/tier").put(protect, updateUserTier);
 router
   .route("/profile")
   .get(protect, getUserProfile)

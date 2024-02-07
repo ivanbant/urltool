@@ -11,8 +11,8 @@ async function generatePaypalToken() {
       password: PAYPAL_SECRET,
     },
   });
-
-  return res.data;
+  const data = await res.data;
+  return data.access_token;
 }
 
 export default generatePaypalToken;

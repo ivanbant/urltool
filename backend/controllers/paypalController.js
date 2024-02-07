@@ -1,12 +1,19 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import generatePaypalToken from "../utils/generatePaypalToken.js";
 
+const { PAYPAL_BASE_URL } = process.env;
+
 // @desc    Handeler for paypal subscription request
-// @route   POST /api/paypal/subscription
+// @route   POST /api/paypal/subscription/create
 // @access  Public
-const subscriptionHandeler = asyncHandler(async (req, res) => {
-  const data = await generatePaypalToken();
-  res.status(200).send(data);
+const createSubscription = asyncHandler(async (req, res) => {
+  const { subscriptionId } = req.body;
+  console.log(subscriptionId);
+  // const accessToken = await generatePaypalToken();
+
+  // const data = await createPaypalSubscription.data;
+  // res.status(201).send(data);
+  res.status(200);
 });
 
 // @desc    Webhook for subscription via paypal
@@ -51,4 +58,4 @@ const subscriptionHook = asyncHandler(async (req, res) => {
   res.status(200).send("Webhook Processed");
 });
 
-export { subscriptionHook, subscriptionHandeler };
+export { subscriptionHook, createSubscription };

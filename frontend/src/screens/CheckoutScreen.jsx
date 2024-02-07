@@ -1,5 +1,7 @@
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import axios from "axios";
 import { useEffect, useState } from "react";
+
 const CheckoutScreen = () => {
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [tier, setTier] = useState("pro");
@@ -29,7 +31,14 @@ const CheckoutScreen = () => {
 
   const onApprove = (data, actions) => {
     return actions.subscription.get().then(function (details) {
-      console.log(details);
+      const subscriptionId = details.id;
+      axios.post(
+        "http://localhost:5000/api/paypal/subscription/create",
+        {
+          subscriptionId,
+        },
+        { withCredentials: true }
+      );
     });
   };
   const onError = (err) => {
