@@ -1,4 +1,4 @@
-const updateUserTier = asyncHandler(async (req, res) => {
+const updateUserTier = async (userId) => {
   const { tier } = req.body;
   const user = req.user;
   if (user) {
@@ -15,6 +15,6 @@ const updateUserTier = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-});
+};
 
 export default updateUserTier;

@@ -2,9 +2,13 @@
   "tier": {
     "tierUseLimit": {
       "unregistered": 5,
-      "free": 20,
-      "pro": 100,
-      "enterprise": 1000
+      "free": 15,
+      "pro": 50,
+      "pro_plus": 100
+    },
+    "plan_id": {
+      "pro": "P-3K194344HU550463TMUD24SQ",
+      "pro_plus": "P-17E469057R186361TMUD25CQ"
     }
   }
 }

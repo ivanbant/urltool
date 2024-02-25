@@ -5,7 +5,6 @@ import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
-import constants from "../constants.json" assert { type: "json" };
 
 // @desc    Get Url Clicks
 // @route   GET /api/urls/clicks
@@ -53,46 +52,48 @@ const createUrl = asyncHandler(async (req, res) => {
   const { originalUrls, userId } = req.body;
   const base = process.env.BASE_URL || "http://localhost:5000";
 
-  let responseUrls = [];
+  // Validate urls
   for (const originalUrl of originalUrls) {
     if (!validateUrl(originalUrl)) {
-      res.status(400).json("Invalid Url");
-      return;
+      res.status(400);
+      throw new Error("Your urls are in invalid format");
     }
   }
   try {
-    let user = req.user ? req.user : await User.findById(userId);
+    let user = await User.findById(userId);
     if (!user) {
-      res.status(404).json("User not found");
-      return;
-    } else {
-      if (
-        user.resetDate < new Date() &&
-        user.resetDate.getMonth() !== new Date().getMonth() &&
-        user.resetDate.getDay() <= new Date().getDay()
-      ) {
-        user.urlsCreated = 0;
-        user.resetDate = new Date();
-        await user.save();
-      }
-      if (user.urlsCreated >= constants.tier.tierUseLimit[user.tier]) {
-        res.status(403);
-
-        throw new Error("User has reached their limit of urls created");
-      }
+      res.status(404);
+      throw new Error("Something went wrong. Refresh and try again");
     }
+
+    if (user.urlsUsesLeft <= 0) {
+      res.status(400);
+      throw new Error("You have no uses of service left");
+    }
+
+    if (user.urlsUsesLeft < originalUrls.length) {
+      res.status(400);
+      throw new Error("You try to create more urls than you have uses left");
+    }
+
+    let responseUrls = [];
     for (const originalUrl of originalUrls) {
-      let url = await Url.findOne({ originalUrl });
+      // check if url already used by user to not create a copy
+      let url = await Url.findOne({ originalUrl, user });
       if (url) {
         responseUrls.push(url);
       } else {
+        // check if shortened url code already exist. Needs to be unique.
         let urlId;
-        do {
-          urlId = nanoid(6);
-          let urlIdExists = await Url.findOne({ urlId });
-          if (!urlIdExists) break;
-        } while (urlIdExists);
+        let urlIdExists;
 
+        do {
+          urlIdExists = null;
+          urlId = nanoid(6);
+          urlIdExists = await Url.findOne({ urlId });
+          if (!urlIdExists) break;
+        } while (true);
+        // create shorten url
         let shortUrl = `${base}/${urlId}`;
 
         url = new Url({
@@ -101,7 +102,8 @@ const createUrl = asyncHandler(async (req, res) => {
           shortUrl,
           urlId,
         });
-        user.urlsCreated++;
+
+        user.urlsUsesLeft--;
 
         await url.save();
         await user.save();
@@ -110,7 +112,6 @@ const createUrl = asyncHandler(async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
     res.status(res.statusCode || 500);
     throw new Error(err.message || "Server Error");
   }
