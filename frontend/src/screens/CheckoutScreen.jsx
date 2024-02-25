@@ -1,10 +1,21 @@
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../services/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutScreen = () => {
+  const { user } = useContext(UserContext);
+
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [tier, setTier] = useState("pro");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user || user.isUnreg) {
+      navigate("/login?return_to=checkout");
+    }
+  }, [user]);
 
   useEffect(() => {
     const loadPaypalScript = async () => {

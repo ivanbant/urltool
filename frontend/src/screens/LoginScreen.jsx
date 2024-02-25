@@ -1,12 +1,15 @@
 import { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserContext from "../services/UserContext";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassowrd] = useState("");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const returnTo = searchParams.get("return_to");
 
   const { setCredentials } = useContext(UserContext);
 
@@ -27,7 +30,11 @@ const LoginScreen = () => {
       if (data) {
         toast.success(`Welcome ${data.name}`);
         setCredentials(data);
-        navigate("/");
+        if (!returnTo) {
+          navigate("/");
+        } else {
+          navigate(`/${returnTo}`);
+        }
       }
     } catch (error) {
       console.log(error);

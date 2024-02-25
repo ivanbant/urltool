@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import UserContext from "../services/UserContext";
 
 const BuilderUrlForm = ({ shortenUrl }) => {
+  const { user, createUnregUser } = useContext(UserContext);
+
   const [originalUrl, setOriginalUrl] = useState("");
   const [campaignSource, setCampaignSource] = useState("");
   const [campaignMedium, setCampaignMedium] = useState("");

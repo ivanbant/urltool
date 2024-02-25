@@ -11,11 +11,12 @@ const UrlBuilder = () => {
   // const localDate = `${currentDate.getFullYear()}-${String(
   //   currentDate.getMonth() + 1
   // ).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
-  const { user } = useContext(UserContext);
+  const { user, createUnregUser } = useContext(UserContext);
   const [simpleBuilder, setSimpleBuilder] = useState(true);
   const [shortUrls, setShortUrls] = useState([]);
 
   const shortenUrl = async (originalUrls) => {
+    if (!user) await createUnregUser();
     const { data, filteredUrls } = await createUrls(originalUrls);
     if (data) {
       setShortUrls([...data, ...filteredUrls]);
