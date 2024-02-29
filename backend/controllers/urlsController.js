@@ -5,6 +5,7 @@ import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
+import constants from "../constants.json" assert { type: "json" };
 
 // @desc    Get Url Clicks
 // @route   GET /api/urls/clicks
@@ -59,6 +60,7 @@ const createUrl = asyncHandler(async (req, res) => {
       throw new Error("Your urls are in invalid format");
     }
   }
+
   try {
     let user = await User.findById(userId);
     if (!user) {
@@ -66,14 +68,24 @@ const createUrl = asyncHandler(async (req, res) => {
       throw new Error("Something went wrong. Refresh and try again");
     }
 
-    if (user.urlsUsesLeft <= 0) {
-      res.status(400);
-      throw new Error("You have no uses of service left");
-    }
+    // Check if its a month since last update then reset uses
+    if (new Date(user.nextResetDate) >= new Date()) {
+      if (user.urlsUsesLeft <= 0) {
+        res.status(400);
+        throw new Error("You have no uses of service left");
+      }
 
-    if (user.urlsUsesLeft < originalUrls.length) {
-      res.status(400);
-      throw new Error("You try to create more urls than you have uses left");
+      if (user.urlsUsesLeft < originalUrls.length) {
+        res.status(400);
+        throw new Error("You try to create more urls than you have uses left");
+      }
+    } else {
+      // Reset uses and reset date
+      user.nextResetDate = new Date().setMonth(new Date().getMonth() + 1);
+      user.urlsUsesLeft =
+        user.tier === constants.plan[0].tier
+          ? constants.plan[0].useLimit
+          : constants.plan[1].useLimit;
     }
 
     let responseUrls = [];

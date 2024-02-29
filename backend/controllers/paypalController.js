@@ -2,6 +2,8 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import generatePaypalToken from "../utils/generatePaypalToken.js";
 import Subscription from "../models/subscriptionModel.js";
 import axios from "axios";
+import User from "../models/userModel.js";
+import constants from "../constants.json" assert { type: "json" };
 
 // @desc    Handeler for paypal subscription request
 // @route   POST /api/paypal/subscription/create
@@ -27,19 +29,27 @@ const createSubscription = asyncHandler(async (req, res) => {
       if (subscription)
         res.status(201).send({ subscriptionId: subscription.subscriptionId });
       else {
+        const user = User.findById(req.user._id);
+        const plan = constants.plan.find((plan) => plan.id === data.plan_id);
         subscription = await Subscription.create({
-          user: req.user._id,
+          user: user._id,
           email: data.subscriber.email_address,
           payerId: data.subscriber.payer_id,
           payerName: data.subscriber.name.given_name,
           payerSurname: data.subscriber.name.surname,
-          tier: "Pro",
+          tier: plan.tier,
           status: data.status,
           subscriptionId: data.id,
+          planId: data.plan_id,
           startTime: new Date(data.start_time),
           nextBillingDate: new Date(data.billing_info.next_billing_time),
           cancelLink: data.links[0].href,
         });
+        user.subscription = subscription._id;
+        user.tier = plan.tier;
+        user.urlsUsesLeft = user.urlsUsesLeft + plan.useLimit;
+        user.nextResetDate = new Date(data.billing_info.next_billing_time);
+        user.save();
         res.status(201).send({ subscriptionId: subscription.subscriptionId });
       }
     }

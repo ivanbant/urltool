@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
   const setCredentials = (user) => {
     setUser(user);
     user.expireTime = new Date().getTime() + 1000 * 60 * 60 * 24 * 30;
-    localStorage.setItem("userInfo", JSON.stringify(...user));
+    localStorage.setItem("userInfo", JSON.stringify(user));
   };
 
   const logout = () => {

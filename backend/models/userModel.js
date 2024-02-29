@@ -6,12 +6,19 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: false },
     email: { type: String, unique: true, sparse: true },
     password: { type: String, required: false },
-    subscription: { type: String, required: false },
+    subscription: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subscription",
+      required: false,
+    },
+    tier: { type: String, required: true },
     urlsUsesLeft: { type: Number, required: true, default: 0 },
-    userCookies: { type: String, required: false },
     fingerprint: { type: String, required: false },
-    resetDate: { type: Date, required: false, default: new Date() },
-    uregUserEntryDate: { type: Date, required: false, expires: "30d" },
+    nextResetDate: {
+      type: Date,
+      required: true,
+      default: new Date().setMonth(new Date().getMonth() + 1),
+    },
     isAdmin: { type: Boolean, default: false },
   },
   {

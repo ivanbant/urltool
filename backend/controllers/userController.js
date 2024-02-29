@@ -45,8 +45,8 @@ const createUnregUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.create({
       fingerprint,
-      urlsUsesLeft: constants.tier.tierUseLimit.unregistered,
-      uregUserEntryDate: new Date(),
+      urlsUsesLeft: constants.plan[0].useLimit,
+      tier: constants.plan[0].tier,
     });
     res.status(201).json({
       _id: user._id,
@@ -74,7 +74,8 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
-    urlsUsesLeft: constants.tier.tierUseLimit.free,
+    urlsUsesLeft: constants.plan[1].useLimit,
+    tier: constants.plan[1].tier,
   });
 
   if (user) {
