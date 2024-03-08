@@ -1,5 +1,5 @@
 {
-  "name": "urlproject",
+  "name": "urltool",
   "version": "1.0.0",
   "description": "Url builder and shortener tool",
   "type": "module",
@@ -8,7 +8,8 @@
     "start": "node backend/index.js",
     "server": "nodemon backend/index.js",
     "client": "npm run dev --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "tunnel": "powershell -ExecutionPolicy Bypass -Command \"lt --port 5000\""
   },
   "author": "",
   "license": "ISC",

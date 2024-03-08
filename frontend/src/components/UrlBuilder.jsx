@@ -29,7 +29,7 @@ const UrlBuilder = () => {
         originalUrls,
         userId: user._id,
       });
-
+      console.log(data);
       let filteredUrls = shortUrls;
       data.forEach((dataItem) => {
         filteredUrls = filteredUrls.filter(

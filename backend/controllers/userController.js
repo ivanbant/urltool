@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
-import constants from "../constants.json" assert { type: "json" };
+import config from "../config/config.json" assert { type: "json" };
 
 // @desc    Login user
 // @route   POST /api/users/login
@@ -45,8 +45,9 @@ const createUnregUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.create({
       fingerprint,
-      urlsUsesLeft: constants.plan[0].useLimit,
-      tier: constants.plan[0].tier,
+      urlsUsesLeft: config.plan[0].useLimit,
+      tier: config.plan[0].tier,
+      uregUserEntryDate: new Date(),
     });
     res.status(201).json({
       _id: user._id,
@@ -74,8 +75,8 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
-    urlsUsesLeft: constants.plan[1].useLimit,
-    tier: constants.plan[1].tier,
+    urlsUsesLeft: config.plan[1].useLimit,
+    tier: config.plan[1].tier,
   });
 
   if (user) {

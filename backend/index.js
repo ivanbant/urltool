@@ -7,6 +7,7 @@ import urlsRoutes from "./routes/urlsRoutes.js";
 import indexRoutes from "./routes/indexRoutes.js";
 import paypalRoutes from "./routes/paypalRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
+import loadConfig from "./config/loadConfig.js";
 // import "./config/sqldb.js";
 import "dotenv/config";
 
@@ -14,10 +15,11 @@ const PORT = process.env.PORT || 5000;
 
 // Connect to database
 connectDB();
+loadConfig();
 
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:5173", // Replace with your frontend's origin
+  origin: ["http://localhost:5173"], // Replace with your frontend's origin
   credentials: true,
 };
 

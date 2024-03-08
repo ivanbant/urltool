@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
-import constants from "../constants.json" assert { type: "json" };
+import config from "../config/config.json" assert { type: "json" };
 
 // @desc    Get Url Clicks
 // @route   GET /api/urls/clicks
@@ -61,6 +61,7 @@ const createUrl = asyncHandler(async (req, res) => {
     }
   }
 
+  let responseUrls = [];
   try {
     let user = await User.findById(userId);
     if (!user) {
@@ -83,12 +84,11 @@ const createUrl = asyncHandler(async (req, res) => {
       // Reset uses and reset date
       user.nextResetDate = new Date().setMonth(new Date().getMonth() + 1);
       user.urlsUsesLeft =
-        user.tier === constants.plan[0].tier
-          ? constants.plan[0].useLimit
-          : constants.plan[1].useLimit;
+        user.tier === config.plan[0].tier
+          ? config.plan[0].useLimit
+          : config.plan[1].useLimit;
     }
 
-    let responseUrls = [];
     for (const originalUrl of originalUrls) {
       // check if url already used by user to not create a copy
       let url = await Url.findOne({ originalUrl, user });
@@ -119,7 +119,6 @@ const createUrl = asyncHandler(async (req, res) => {
 
         await url.save();
         await user.save();
-
         responseUrls.push(url);
       }
     }
@@ -127,7 +126,6 @@ const createUrl = asyncHandler(async (req, res) => {
     res.status(res.statusCode || 500);
     throw new Error(err.message || "Server Error");
   }
-
   res.status(201).json(responseUrls);
 });
 

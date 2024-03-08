@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: new Date().setMonth(new Date().getMonth() + 1),
     },
+    uregUserEntryDate: { type: Date, required: false, expires: "35d" },
     isAdmin: { type: Boolean, default: false },
   },
   {

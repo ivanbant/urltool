@@ -1,8 +1,0 @@
-{
-  "plan": [
-    { "id": "P-1", "tier": "Ureg", "useLimit": 3 },
-    { "id": "P-2", "tier": "Free", "useLimit": 10 },
-    { "id": "P-3K194344HU550463TMUD24SQ", "tier": "Pro", "useLimit": 30 },
-    { "id": "P-17E469057R186361TMUD25CQ", "tier": "Pro Plus", "useLimit": 50 }
-  ]
-}
