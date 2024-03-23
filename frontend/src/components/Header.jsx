@@ -24,7 +24,10 @@ const Header = () => {
       <div className="flex items-center justify-between">
         {/* <!-- Logo and Menu Container --> */}
         <div className="flex items-center space-x-20">
-          <img src="/src/assets/images/logo.svg" alt="" />
+          {/* <img src="/src/assets/images/logo.svg" alt="" /> */}
+          <h1 className=" text-4xl font-semibold text-veryDarkViolet">
+            UrlTool
+          </h1>
           {/* <!-- Left Menu --> */}
           <div className="hidden lg:flex space-x-8 font-bold">
             <Link to="/">

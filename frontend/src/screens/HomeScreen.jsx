@@ -1,9 +1,9 @@
 import React from "react";
-import Hero from "../components/Hero";
-import UrlBuilder from "../components/UrlBuilder";
-import InfoSection from "../components/InfoSection";
-import CTASection from "../components/CtaSection";
-import PlansSection from "../components/PlansSection";
+import Hero from "@components/Hero.jsx";
+import UrlBuilder from "@components/UrlBuilder.jsx";
+import InfoSection from "@components/InfoSection.jsx";
+import CTASection from "@components/CTASection.jsx";
+import PlansSection from "@components/PlansSection.jsx";
 
 const HomeScreen = () => {
   return (

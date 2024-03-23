@@ -19,7 +19,7 @@ loadConfig();
 
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Replace with your frontend's origin
+  origin: ["http://localhost:8080"], // Replace with your frontend's origin
   credentials: true,
 };
 

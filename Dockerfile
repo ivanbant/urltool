@@ -2,7 +2,7 @@ FROM node
 
 WORKDIR /urltool
 
-COPY . ./
+COPY . /urltool
 
 RUN npm install
 
@@ -12,7 +12,6 @@ RUN npm install
 
 WORKDIR /urltool
 
-EXPOSE 5000
-EXPOSE 5173
+EXPOSE 8080
 
 CMD ["npm", "run", "dev"]
