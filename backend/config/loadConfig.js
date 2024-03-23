@@ -8,7 +8,7 @@ function loadConfig() {
 
   const config = {
     plan: [
-      { id: "P-1", tier: "Ureg", useLimit: 3 },
+      { id: "P-1", tier: "Ureg", useLimit: 4 },
       { id: "P-2", tier: "Free", useLimit: 10 },
       { id: "P-07796694LN748203FMUQC5CY", tier: "Pro", useLimit: 30 },
       {

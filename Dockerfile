@@ -13,5 +13,6 @@ RUN npm install
 WORKDIR /urltool
 
 EXPOSE 8080
+EXPOSE 5000
 
 CMD ["npm", "run", "dev"]

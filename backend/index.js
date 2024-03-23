@@ -21,6 +21,8 @@ const app = express();
 const corsOptions = {
   origin: ["http://localhost:8080"], // Replace with your frontend's origin
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
 };
 
 // Middleware

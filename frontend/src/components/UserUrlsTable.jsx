@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaChartLine } from "react-icons/fa";
 
 const UserUrlsTable = ({ urls }) => {
   return (
@@ -18,6 +19,7 @@ const UserUrlsTable = ({ urls }) => {
               <td>
                 {" "}
                 <Link to={`/dashboard/analytics/${url._id}`}>
+                  <FaChartLine className=" text-blue-700 text-lg inline" />{" "}
                   {url.originalUrl}
                 </Link>{" "}
               </td>

@@ -3,7 +3,8 @@ const Footer = () => {
     <footer className="py-16 bg-veryDarkViolet">
       <div className="container flex flex-col items-center justify-between mx-auto space-y-16 md:flex-row md:space-y-0 md:items-start">
         {/* <!-- Logo --> */}
-        <img src="/src/assets/images/logo.svg" alt="" />
+        {/* <img src="/src/assets/images/logo.svg" alt="" /> */}
+        <h1 className=" text-4xl font-semibold text-gray-500">UrlTool</h1>
 
         {/* <!-- Menue Container --> */}
         <div className="flex flex-col space-y-16 md:space-x-20 md:flex-row md:space-y-0">
@@ -74,12 +75,6 @@ const Footer = () => {
                 className="capitalize text-grayishViolet hover:text-cyan"
               >
                 Our Team
-              </a>
-              <a
-                href="#"
-                className="capitalize text-grayishViolet hover:text-cyan"
-              >
-                Careers
               </a>
               <a
                 href="#"

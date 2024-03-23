@@ -69,7 +69,7 @@ const CheckoutScreen = () => {
         <div className="w-3/4">
           <div onChange={changeTierHandler} className="flex flex-col space-y-2">
             <input type="radio" value="pro" name="tier" defaultChecked /> Pro
-            <input type="radio" value="enterprise" name="tier" /> Enterprise
+            <input type="radio" value="enterprise" name="tier" /> Pro Plus
           </div>
         </div>
         <div className="p-6 shadow-lg flex flex-col w-1/4 h-fit">
@@ -83,8 +83,8 @@ const CheckoutScreen = () => {
               </div>
             ) : (
               <div className="flex justify-between p-5">
-                <p>Enterprise</p>
-                <p>$100</p>
+                <p>Pro+</p>
+                <p>$30</p>
               </div>
             )}
 
