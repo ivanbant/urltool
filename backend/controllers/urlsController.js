@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
-import config from "../config/config.json" assert { type: "json" };
+import config from "../config/config.js";
 
 // @desc    Get Url Clicks
 // @route   GET /api/urls/clicks

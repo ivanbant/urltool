@@ -44,7 +44,7 @@ const CheckoutScreen = () => {
     return actions.subscription.get().then(async function (details) {
       const subscriptionId = details.id;
       const res = await axios.post(
-        "http://localhost:5000/api/paypal/subscription/create",
+        "http://localhost:5000/api/subscription/",
         {
           subscriptionId,
         },

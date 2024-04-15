@@ -1,13 +1,8 @@
 import express from "express";
-import {
-  subscriptionHook,
-  createSubscription,
-} from "../controllers/paypalController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { paypalWebhook } from "../controllers/paypalController.js";
 
 const router = express.Router();
 
-router.route("/subscription/hook").post(subscriptionHook);
-router.route("/subscription/create").post(protect, createSubscription);
+router.route("/hook").post(paypalWebhook);
 
 export default router;

@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
-import config from "../config/config.json" assert { type: "json" };
+import config from "../config/config.js";
 
 // @desc    Login user
 // @route   POST /api/users/login

@@ -10,7 +10,6 @@
     "client": "npm run dev --prefix frontend",
     "preview": "npm run preview --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "docker": "concurrently \"npm run server\" \"npm run preview\"",
     "tunnel": "powershell -ExecutionPolicy Bypass -Command \"lt --port 5000\""
   },
   "author": "",

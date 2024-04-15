@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const SubscriptionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  config: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Config",
+    required: true,
+  },
   email: {
     type: String,
     required: true,

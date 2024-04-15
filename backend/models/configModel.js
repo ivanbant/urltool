@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
-const planSchema = new Schema({
+const planSchema = new mongoose.Schema({
   paypal_id: String,
   tier: String,
+  price: String,
   useLimit: Number,
 });
 
