@@ -8,7 +8,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassowrd] = useState("");
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const returnTo = searchParams.get("return_to");
 
   const { setCredentials } = useContext(UserContext);

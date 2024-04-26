@@ -2,18 +2,23 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../services/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const CheckoutScreen = () => {
+  const [searchParams] = useSearchParams();
+  const startTier = searchParams.get("tier");
   const { user } = useContext(UserContext);
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
-  const [tier, setTier] = useState("pro");
+  const [tier, setTier] = useState(startTier ? startTier : "pro");
 
   const navigate = useNavigate();
   useEffect(() => {
     if (!user || user.isUnreg) {
       navigate("/login?return_to=checkout");
+    }
+    if (user.tier === "Pro Plus") {
+      navigate("/dashboard/subscription");
     }
   }, [user]);
 
@@ -50,7 +55,6 @@ const CheckoutScreen = () => {
         },
         { withCredentials: true }
       );
-      console.log(res);
     });
   };
   const onError = (err) => {
@@ -68,8 +72,21 @@ const CheckoutScreen = () => {
       <div className="w-full  flex justify-center ">
         <div className="w-3/4">
           <div onChange={changeTierHandler} className="flex flex-col space-y-2">
-            <input type="radio" value="pro" name="tier" defaultChecked /> Pro
-            <input type="radio" value="enterprise" name="tier" /> Pro Plus
+            <input
+              type="radio"
+              value="pro"
+              name="tier"
+              checked={tier !== "pro_plus" && user.tier !== "Pro"}
+              disabled={user.tier === "Pro"}
+            />{" "}
+            Pro
+            <input
+              type="radio"
+              value="pro_plus"
+              name="tier"
+              checked={tier === "pro_plus" || user.tier === "Pro"}
+            />{" "}
+            Pro Plus
           </div>
         </div>
         <div className="p-6 shadow-lg flex flex-col w-1/4 h-fit">

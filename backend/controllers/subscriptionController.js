@@ -7,6 +7,33 @@ import Invoice from "../models/invoiceModel.js";
 import Config from "../models/configModel.js";
 import loadConfig from "../config/config.js";
 
+// @desc    Get user subscription
+// @route   GET /api/subscription/userId
+// @access  Private
+const getUserSubscription = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  let subscription;
+  try {
+    subscription = await Subscription.findOne({ user: userId });
+  } catch {
+    res.status(500);
+    throw new Error("DB Error");
+  }
+  res.status(200);
+  if (subscription) {
+    res.json({
+      tier: subscription.tier,
+      status: subscription.status,
+      cancelLink: subscription.cancelLink,
+      paymentMethod: subscription.paymentMethod,
+      nextBillingDate: subscription.nextBillingDate,
+      startTime: subscription.startTime,
+    });
+    return;
+  }
+  res.json({});
+});
+
 // @desc    Handeler for paypal subscription request
 // @route   POST /api/subscription/
 // @access  Private
@@ -109,6 +136,27 @@ async function createInvoiceInDB(subscription) {
   return invoice;
 }
 
+async function updateSubscriptionInDB(user, data) {
+  const subscription = await Subscription.findOne({ user: user._id });
+  if (!subscription) return undefined;
+  const config = await loadConfig();
+  const plan = config.plan.find((plan) => plan.paypal_id === data.plan_id);
+  subscription.config = config._id;
+  subscription.email = data.subscriber.email_address;
+  subscription.payerId = data.subscriber.payer_id;
+  subscription.payerName = data.subscriber.name.given_name;
+  subscription.payerSurname = data.subscriber.name.surname;
+  subscription.tier = plan.tier;
+  subscription.status = data.status;
+  subscription.subscriptionId = data.id;
+  subscription.planId = plan.paypal_id;
+  subscription.startTime = new Date(data.start_time);
+  subscription.nextBillingDate = new Date(data.billing_info.next_billing_time);
+  subscription.cancelLink = data.links[0].href;
+  subscription.save();
+  return subscription;
+}
+
 async function createSubscriptionInDB(user, data) {
   const config = await loadConfig();
   const plan = config.plan.find((plan) => plan.paypal_id === data.plan_id);
@@ -144,4 +192,4 @@ async function updateUserSubscriptionStatus(user, subscription) {
   return user;
 }
 
-export { createSubscription, getInvoices, getInvoiceById };
+export { createSubscription, getInvoices, getInvoiceById, getUserSubscription };

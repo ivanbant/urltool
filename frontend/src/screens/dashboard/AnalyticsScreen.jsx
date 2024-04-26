@@ -20,7 +20,7 @@ const AnalyticsScreen = () => {
   }, [user._id]);
 
   return (
-    <div className="flex flex-col p-5 items-center justify-center min-h-[50vh]">
+    <div className="flex flex-col p-5 items-center justify-center  min-h-screen">
       <UserUrlsTable urls={urls} />
     </div>
   );

@@ -111,12 +111,12 @@ async function cancelSubscriptionWithStatus(status, subscriptionId) {
   }
 }
 
-async function createInvoiceInDB(user, plan, subscription) {
-  return await Invoice.create({
-    user: user._id,
-    subscription: subscription._id,
-    plan: plan.tier,
-  });
-}
+// async function createInvoiceInDB(user, plan, subscription) {
+//   return await Invoice.create({
+//     user: user._id,
+//     subscription: subscription._id,
+//     plan: plan.tier,
+//   });
+// }
 
 export { paypalWebhook };

@@ -3,12 +3,16 @@ import {
   createSubscription,
   getInvoices,
   getInvoiceById,
+  getUserSubscription,
 } from "../controllers/subscriptionController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, createSubscription);
+router
+  .route("/")
+  .get(protect, getUserSubscription)
+  .post(protect, createSubscription);
 router.route("/invoices").get(protect, getInvoices);
 router.route("/invoices/:id").get(protect, getInvoiceById);
 

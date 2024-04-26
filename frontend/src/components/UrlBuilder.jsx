@@ -29,7 +29,6 @@ const UrlBuilder = () => {
         originalUrls,
         userId: user._id,
       });
-      console.log(data);
       let filteredUrls = shortUrls;
       data.forEach((dataItem) => {
         filteredUrls = filteredUrls.filter(
@@ -38,7 +37,6 @@ const UrlBuilder = () => {
       });
       return { data, filteredUrls };
     } catch (error) {
-      console.log(error);
       toast.error(error?.response?.data?.message);
     }
   };

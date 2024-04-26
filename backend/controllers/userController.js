@@ -18,6 +18,8 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      tier: user.tier,
+      urlsUsesLeft: user.urlsUsesLeft,
       isAdmin: user.isAdmin,
     });
   } else {
@@ -51,6 +53,8 @@ const createUnregUser = asyncHandler(async (req, res) => {
     });
     res.status(201).json({
       _id: user._id,
+      tier: user.tier,
+      urlsUsesLeft: user.urlsUsesLeft,
     });
   } catch (error) {
     res.status(400);
@@ -84,6 +88,8 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      tier: user.tier,
+      urlsUsesLeft: user.urlsUsesLeft,
     });
   } else {
     res.status(400);
