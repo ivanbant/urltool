@@ -9,14 +9,15 @@ const connectDB = async () => {
 
   // Connect to database
   try {
-    const conn = await mongoose.connect(mongoURI, {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    });
+    const conn = await mongoose.connect(mongoURI);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline);
   } catch (err) {
-    console.log(`Error: ${err.message}`.red.underline.bold);
+    if (err instanceof Error) {
+      console.log(`Error: ${err.message}`.red.underline.bold);
+    } else {
+      console.log(`An error occurred: ${err}`.red.underline.bold);
+    }
     process.exit(1);
   }
 };

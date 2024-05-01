@@ -1,11 +1,11 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Url from "../models/urlModel.js";
 import Click from "../models/clickModel.js";
-
+import { Request, Response } from "express";
 // @desc    Reroute Url
 // @route   GET /api/urls/route/:urlId
 // @access  Public
-const routeUrl = asyncHandler(async (req, res) => {
+const routeUrl = asyncHandler(async (req: Request, res: Response) => {
   const ip = getIp(req);
   try {
     const url = await Url.findOne({ urlId: req.params.urlId });
@@ -16,8 +16,8 @@ const routeUrl = asyncHandler(async (req, res) => {
       const click = new Click({
         user: url.user ? url.user.toString() : null,
         url: url._id,
-        ipv4: ip.ip,
-        codedIpv4: ip.codedIpv4,
+        ipv4: ip ? ip.ip : "",
+        codedIpv4: ip ? ip.codedIpv4 : "",
       });
       await click.save();
       return res.redirect(url.originalUrl);
@@ -28,13 +28,16 @@ const routeUrl = asyncHandler(async (req, res) => {
   }
 });
 
-function getIp(req) {
-  let ip =
-    (req.headers["x-forwarded-for"] || "").split(",").shift() ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
+function getIp(req: Request) {
+  let ip: string | undefined = "";
+  if (typeof req.headers["x-forwarded-for"] === "string") {
+    ip = req.headers["x-forwarded-for"].split(",").shift() || "";
+  } else if (Array.isArray(req.headers["x-forwarded-for"])) {
+    ip = req.headers["x-forwarded-for"][0] || "";
+  }
 
+  ip = ip || req.socket.remoteAddress;
+  if (!ip) return "";
   // Regular expression for IPv4
   const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
   // Simplified regular expression for IPv6 (also matches IPv4-mapped IPv6 addresses)
@@ -58,7 +61,7 @@ function getIp(req) {
   return { type: "unknown", ip: null, codedIpv4: null };
 }
 
-const translateIpv4 = (ipv4) => {
+const translateIpv4 = (ipv4: string) => {
   const splitIp = ipv4.split(".").map((num) => parseInt(num));
   // Translated IP = 16777216*w + 65536*x + 256*y + z where IP Address = w.x.y.z
   return (

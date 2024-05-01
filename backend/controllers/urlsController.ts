@@ -6,36 +6,42 @@ import { validateUrl } from "../utils/validateUrl.js";
 import { nanoid } from "nanoid";
 import QRCode from "qrcode";
 import config from "../config/config.js";
+import { Request, Response } from "express";
+import { PrivateRequest } from "../types/Auth.js";
+import { ConfigType, PlanType } from "../types/Config.js";
 
 // @desc    Get Url Clicks
 // @route   GET /api/urls/clicks
 // @access  Private
-const getUrlClicks = asyncHandler(async (req, res) => {
-  const urlId = req.params.urlId;
-  const startDate = new Date(req.query.startDate);
-  const endDate = new Date(req.query.endDate);
-  startDate.setHours(0, 0, 0, 0);
-  endDate.setHours(23, 59, 59, 999);
+const getUrlClicks = asyncHandler(
+  async (req: PrivateRequest, res: Response) => {
+    const urlId = req.params.urlId;
+    const startDate = new Date(req.query.startDate as string);
+    const endDate = new Date(req.query.endDate as string);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
 
-  try {
-    const clicks = await Clicks.find({
-      url: urlId,
-      createdAt: {
-        $gte: startDate,
-        $lte: endDate,
-      },
-    });
-    res.status(200).json(clicks);
-  } catch (err) {
-    res.status(500);
-    throw new Error("Server Error: " + err);
+    try {
+      const clicks = await Clicks.find({
+        url: urlId,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      });
+      res.status(200).json(clicks);
+    } catch (err) {
+      res.status(500);
+      throw new Error("Server Error: " + err);
+    }
   }
-});
+);
 
 // @desc    Get User Urls
 // @route   GET /api/urls/
 // @access  Private
-const getUserUrls = asyncHandler(async (req, res) => {
+const getUserUrls = asyncHandler(async (req: PrivateRequest, res: Response) => {
+  if (!req.user) throw new Error("Not authorized");
   const userId = req.user._id;
   try {
     const urls = await Url.find({ user: userId });
@@ -49,7 +55,7 @@ const getUserUrls = asyncHandler(async (req, res) => {
 // @desc    Create Short Url
 // @route   POST /api/urls/
 // @access  Public
-const createUrl = asyncHandler(async (req, res) => {
+const createUrl = asyncHandler(async (req: Request, res: Response) => {
   const { originalUrls, userId } = req.body;
   const base = process.env.BASE_URL || "http://localhost:5000";
 
@@ -82,11 +88,15 @@ const createUrl = asyncHandler(async (req, res) => {
       }
     } else {
       // Reset uses and reset date
-      user.nextResetDate = new Date().setMonth(new Date().getMonth() + 1);
+      user.nextResetDate = new Date(
+        new Date().setMonth(new Date().getMonth() + 1)
+      );
+      const configs = await config();
+      if (!configs) throw new Error("DB Error");
+      const unregPlan = configs.plan[0];
+      const freePlan = configs.plan[1];
       user.urlsUsesLeft =
-        user.tier === config.plan[0].tier
-          ? config.plan[0].useLimit
-          : config.plan[1].useLimit;
+        user.tier === unregPlan.tier ? unregPlan.useLimit : freePlan.useLimit;
     }
 
     for (const originalUrl of originalUrls) {
@@ -124,12 +134,16 @@ const createUrl = asyncHandler(async (req, res) => {
     }
   } catch (err) {
     res.status(res.statusCode || 500);
-    throw new Error(err.message || "Server Error");
+    if (err instanceof Error) {
+      throw new Error(err.message || "Server Error");
+    } else {
+      throw new Error("Server Error");
+    }
   }
   res.status(201).json(responseUrls);
 });
 
-const createQRfromId = asyncHandler(async (req, res) => {
+const createQRfromId = asyncHandler(async (req: Request, res: Response) => {
   const { urlIds } = req.body;
   let responseUrls = [];
   for (const urlId of urlIds) {

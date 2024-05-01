@@ -1,6 +1,7 @@
-import Config from "../models/configModel.js";
+import Config from "../models/configModel";
+import { ConfigType } from "../types/Config";
 
-let configs;
+let configs: ConfigType | null;
 async function config() {
   if (!configs) {
     configs = await Config.findOne({ current: true });

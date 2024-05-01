@@ -2,11 +2,12 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Subscription from "../models/subscriptionModel.js";
 import User from "../models/userModel.js";
 import config from "../config/config.js";
+import { Request, Response } from "express";
 
 // @desc    Webhook for subscription via paypal
 // @route   POST /api/paypal/hook
 // @access  Public
-const paypalWebhook = asyncHandler(async (req, res) => {
+const paypalWebhook = asyncHandler(async (req: Request, res: Response) => {
   console.log("Webhook received: " + req.body);
 
   const eventType = req.body.event_type;
@@ -28,15 +29,18 @@ const paypalWebhook = asyncHandler(async (req, res) => {
           if (user) {
             subscription.status = "ACTIVE";
             subscription.nextBillingDate = new Date(
-              subscription.resource.agreement_details.next_billing_date
+              req.body.resource.agreement_details.next_billing_date
             );
-            const plan = config().plan.find(
-              (plan) => plan.id === subscription.planId
+            const configs = await config();
+            if (!configs) throw new Error("Event type not handled");
+            const plan = configs.plan.find(
+              (plan) => plan.paypal_id === subscription.planId
             );
+            if (!plan) throw new Error("Event type not handled");
             user.tier = plan.tier;
             user.urlsUsesLeft = plan.useLimit;
             user.nextResetDate = new Date(
-              subscription.resource.agreement_details.next_billing_date
+              req.body.resource.agreement_details.next_billing_date
             );
             subscription.save();
             user.save();
@@ -88,26 +92,30 @@ const paypalWebhook = asyncHandler(async (req, res) => {
   res.status(200).send("Webhook Processed");
 });
 
-async function cancelSubscriptionWithStatus(status, subscriptionId) {
+async function cancelSubscriptionWithStatus(
+  status: string,
+  subscriptionId: string
+) {
   try {
     const subscription = await Subscription.findOne({ subscriptionId });
     if (subscription) {
       const user = await User.findById(subscription.user);
       if (user) {
         subscription.status = status;
-
-        const plan = config().plan[1];
-
+        const configs = await config();
+        if (!configs) throw new Error(" Not Handled");
+        const plan = configs.plan[1];
         user.tier = plan.tier;
         user.urlsUsesLeft = plan.useLimit;
-        user.nextResetDate = new Date().setMonth(new Date().getMonth() + 1);
+        user.nextResetDate = new Date(
+          new Date().setMonth(new Date().getMonth() + 1)
+        );
         subscription.save();
         user.save();
       }
     }
   } catch {
-    res.status(500);
-    return;
+    throw new Error("DB Error");
   }
 }
 

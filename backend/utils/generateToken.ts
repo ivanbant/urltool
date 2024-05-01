@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
+import { Response } from "express";
 
-const generateToken = async (res, userId) => {
+const generateToken = async (res: Response, userId: number) => {
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET is not defined");
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });

@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const planSchema = new mongoose.Schema({
+const planSchema: Schema = new mongoose.Schema({
   paypal_id: String,
   tier: String,
   price: String,
   useLimit: Number,
 });
 
-const ConfigSchema = new mongoose.Schema(
+const ConfigSchema: Schema = new mongoose.Schema(
   {
     current: {
       type: Boolean,
